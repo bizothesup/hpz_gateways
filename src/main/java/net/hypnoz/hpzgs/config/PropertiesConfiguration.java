@@ -2,9 +2,10 @@
  * Copyright (c) 2023. Hypnoz Tech.
  */
 
-package net.hypnoz.hgw.config;
+package net.hypnoz.hpzgs.config;
 
-import net.hypnoz.hgw.utils.constances.HypnozProperties;
+
+import net.hypnoz.hpzgs.utils.conf.HypnozProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

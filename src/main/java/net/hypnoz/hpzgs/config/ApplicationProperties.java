@@ -1,2 +1,7 @@
-package net.hypnoz.hpzgs.config;public class ApplicationProperties {
+package net.hypnoz.hpzgs.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
+public class ApplicationProperties {
 }

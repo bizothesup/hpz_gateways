@@ -1,14 +1,11 @@
-package com.mycompany.myapp.config;
+package net.hypnoz.hpzgs.config;
 
-import java.util.concurrent.Executor;
-import java.util.function.Supplier;
-import javax.sql.DataSource;
 import liquibase.integration.spring.SpringLiquibase;
+import net.hypnoz.hpzgs.utils.conf.AsyncSpringLiquibase;
+import net.hypnoz.hpzgs.utils.conf.HypnozConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -16,8 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
-import tech.jhipster.config.JHipsterConstants;
-import tech.jhipster.config.liquibase.AsyncSpringLiquibase;
+
+
+import javax.sql.DataSource;
+import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 @Configuration
 public class LiquibaseConfiguration {
@@ -45,11 +45,10 @@ public class LiquibaseConfiguration {
         liquibase.setDatabaseChangeLogLockTable(liquibaseProperties.getDatabaseChangeLogLockTable());
         liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
-        liquibase.setLabels(liquibaseProperties.getLabels());
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
-        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_NO_LIQUIBASE))) {
+        if (env.acceptsProfiles(Profiles.of(HypnozConstants.SPRING_PROFILE_NO_LIQUIBASE))) {
             liquibase.setShouldRun(false);
         } else {
             liquibase.setShouldRun(liquibaseProperties.isEnabled());
@@ -72,7 +71,12 @@ public class LiquibaseConfiguration {
     private static DataSource createNewDataSource(LiquibaseProperties liquibaseProperties, R2dbcProperties dataSourceProperties) {
         String user = getProperty(liquibaseProperties::getUser, dataSourceProperties::getUsername);
         String password = getProperty(liquibaseProperties::getPassword, dataSourceProperties::getPassword);
-        return DataSourceBuilder.create().url(liquibaseProperties.getUrl()).username(user).password(password).build();
+        return DataSourceBuilder.create()
+                .url(liquibaseProperties.getUrl())
+                .username(user)
+                .password(password)
+                .driverClassName(liquibaseProperties.getDriverClassName())
+                .build();
     }
 
     private static String getProperty(Supplier<String> property, Supplier<String> defaultValue) {

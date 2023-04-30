@@ -2,7 +2,7 @@
  * Copyright (c) 2023. Hypnoz Tech.
  */
 
-package net.hypnoz.hgw.utils.constances;
+package net.hypnoz.hpzgs.utils.conf;
 
 public interface HypnozConstants {
     String SPRING_PROFILE_DEVELOPMENT = "dev";

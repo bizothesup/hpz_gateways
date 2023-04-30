@@ -2,7 +2,7 @@
  * Copyright (c) 2023. Hypnoz Tech.
  */
 
-package net.hypnoz.hgw.utils.constances;
+package net.hypnoz.hpzgs.utils.conf;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
