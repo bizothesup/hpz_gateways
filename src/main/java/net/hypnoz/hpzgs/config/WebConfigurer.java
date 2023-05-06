@@ -1,6 +1,7 @@
 package net.hypnoz.hpzgs.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.hypnoz.hpzgs.utils.conf.CachingHttpHeadersFilter;
 import net.hypnoz.hpzgs.utils.conf.HypnozConstants;
 import net.hypnoz.hpzgs.utils.conf.HypnozProperties;
 import org.slf4j.Logger;
@@ -39,7 +40,6 @@ public class WebConfigurer implements WebFluxConfigurer {
         this.hypnozProperties = hypnozProperties;
     }
 
-
     @Bean
     public CorsWebFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -57,8 +57,6 @@ public class WebConfigurer implements WebFluxConfigurer {
         return new CorsWebFilter(source);
     }
 
-
-
     // TODO: remove when this is supported in spring-boot
     @Bean
     HandlerMethodArgumentResolver reactivePageableHandlerMethodArgumentResolver() {
@@ -71,11 +69,11 @@ public class WebConfigurer implements WebFluxConfigurer {
         return new ReactiveSortHandlerMethodArgumentResolver();
     }
 
-   /* @Bean
+    @Bean
     @Order(-2) // The handler must have precedence over WebFluxResponseStatusExceptionHandler and Spring Boot's ErrorWebExceptionHandler
     public WebExceptionHandler problemExceptionHandler(ObjectMapper mapper, ProblemHandling problemHandling) {
         return new ProblemExceptionHandler(mapper, problemHandling);
-    }*/
+    }
 
     @Bean
     ResourceHandlerRegistrationCustomizer registrationCustomizer() {
@@ -83,5 +81,10 @@ public class WebConfigurer implements WebFluxConfigurer {
         return registration -> registration.setCacheControl(null);
     }
 
-
+    @Bean
+    @Profile(HypnozConstants.SPRING_PROFILE_PRODUCTION)
+    public CachingHttpHeadersFilter cachingHttpHeadersFilter() {
+        // Use a cache filter that only match selected paths
+        return new CachingHttpHeadersFilter(TimeUnit.DAYS.toMillis(hypnozProperties.getHttp().getCache().getTimeToLiveInDays()));
+    }
 }
